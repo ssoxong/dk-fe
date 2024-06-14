@@ -7,7 +7,6 @@ function addPost() {
         alert('Please fill in both fields.');
         return;
     }
-
     const post = {
         title: title,
         content: content,
