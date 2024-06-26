@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
             posts.forEach((post, index) => {
                 const postDiv = document.createElement('div');
                 postDiv.className = 'post';
-                postDiv.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p><a href="showPost.html?index=${index}">Read More</a>`;
+                postDiv.innerHTML = `<h2>${post.title}</h2><a href="showPost.html?index=${index}">Read More</a>`;
                 postsContainer.appendChild(postDiv);
             });
         }
