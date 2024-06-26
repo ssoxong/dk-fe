@@ -1,56 +1,84 @@
-// Function to add a post
-function addPost() {
-    const title = document.getElementById('title').value;
-    const content = document.getElementById('content').value;
+document.addEventListener('DOMContentLoaded', function() {
+    const postsContainer = document.getElementById('postsContainer');
+    const postContent = document.getElementById('postContent');
+    const commentsContainer = document.getElementById('commentsContainer');
+    
+    // Sample data for posts and comments
+    const posts = JSON.parse(localStorage.getItem('posts')) || [];
 
-    if (title === '' || content === '') {
-        alert('Please fill in both fields.');
-        return;
+    // Function to display posts
+    function displayPosts() {
+        if (postsContainer) {
+            postsContainer.innerHTML = '';
+            posts.forEach((post, index) => {
+                const postDiv = document.createElement('div');
+                postDiv.className = 'post';
+                postDiv.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p><a href="showPost.html?index=${index}">Read More</a>`;
+                postsContainer.appendChild(postDiv);
+            });
+        }
     }
-    const post = {
-        title: title,
-        content: content,
-        id: new Date().getTime()
-    };
 
-    let posts = localStorage.getItem('posts');
-    if (posts) {
-        posts = JSON.parse(posts);
-    } else {
-        posts = [];
+    // Function to display a single post
+    function displayPost() {
+        if (postContent) {
+            const params = new URLSearchParams(window.location.search);
+            const index = params.get('index');
+            if (index !== null) {
+                const post = posts[index];
+                postContent.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p>`;
+                displayComments(index);
+            }
+        }
     }
 
-    posts.push(post);
-    localStorage.setItem('posts', JSON.stringify(posts));
+    // Function to display comments
+    function displayComments(postIndex) {
+        if (commentsContainer) {
+            const comments = posts[postIndex].comments || [];
+            commentsContainer.innerHTML = '';
+            comments.forEach((comment, index) => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment';
+                commentDiv.innerHTML = `<p>${comment}</p>`;
+                commentsContainer.appendChild(commentDiv);
+            });
+        }
+    }
 
-    document.getElementById('title').value = '';
-    document.getElementById('content').value = '';
+    // Function to add a new comment
+    window.addComment = function() {
+        const params = new URLSearchParams(window.location.search);
+        const index = params.get('index');
+        if (index !== null) {
+            const commentText = document.getElementById('commentText').value;
+            if (commentText) {
+                if (!posts[index].comments) {
+                    posts[index].comments = [];
+                }
+                posts[index].comments.push(commentText);
+                localStorage.setItem('posts', JSON.stringify(posts));
+                displayComments(index);
+                document.getElementById('commentText').value = '';
+            } else {
+                alert('Please enter a comment.');
+            }
+        }
+    }
+
+    // Function to add a new post
+    window.addPost = function() {
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        if (title && content) {
+            posts.push({ title, content, comments: [] });
+            localStorage.setItem('posts', JSON.stringify(posts));
+            window.location.href = 'main.html';
+        } else {
+            alert('Please enter both title and content.');
+        }
+    }
 
     displayPosts();
-}
-
-// Function to display posts
-function displayPosts() {
-    const postsContainer = document.getElementById('postsContainer');
-    postsContainer.innerHTML = '';
-
-    let posts = localStorage.getItem('posts');
-    if (posts) {
-        posts = JSON.parse(posts);
-    } else {
-        posts = [];
-    }
-
-    posts.forEach(post => {
-        const postElement = document.createElement('div');
-        postElement.className = 'post';
-        postElement.innerHTML = `
-            <div class="post-title">${post.title}</div>
-            <div class="post-content">${post.content}</div>
-        `;
-        postsContainer.appendChild(postElement);
-    });
-}
-
-// Initial display of posts
-displayPosts();
+    displayPost();
+});
