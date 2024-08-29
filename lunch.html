@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <a href="main.html"><img src="./img/dk_logo.png"/></a>
+    <link rel="icon" href="./img/favicon.ico" type="image/x-icon">
+    <title>당곡 고등학교 급식 메뉴</title>
+
     <link rel="stylesheet" href="lunch.css">
 </head>
 <body>
     <div class="container">
-        <h1>학교 급식 메뉴</h1>
+        <h1>당곡 고등학교 급식 메뉴</h1>
         <input type="date" id="mealDate" value="">
         <button onclick="fetchMeals()">조회</button>
         <button onclick="window.location.reload()">오늘</button>
@@ -21,7 +25,7 @@
             const atptCode = 'B10'; // 교육청 코드
             const schoolCode = '7010073'; // 학교 코드
             const dateInput = document.getElementById('mealDate');
-            const date = dateInput.value.replace(/-/g, ''); // 입력된 날짜
+            const date = dateInput.value.replace(/-/g, ''); 
 
             if (!date) {
                 alert('날짜를 입력해주세요.');
