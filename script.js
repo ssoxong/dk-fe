@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             posts.forEach((post, index) => {
                 const postDiv = document.createElement('div');
                 postDiv.className = 'post';
-                postDiv.innerHTML = `<h2>${post.title}</h2><a href="showPost.html?id=${post.id}">Read More</a>`;
+                postDiv.innerHTML = `<a href="showPost.html?id=${post.id}"><h2>${post.title}</h2></a>`;
                 postsContainer.appendChild(postDiv);
             });
         }
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             comments.forEach((comment, index) => {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
-                commentDiv.innerHTML = `<p>${comment.content}</p>`;
+                commentDiv.innerHTML = `<p>익명 ${index+1}: ${comment.content}</p>`;
                 commentsContainer.appendChild(commentDiv);
             });
         }
