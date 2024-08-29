@@ -2,64 +2,69 @@ document.addEventListener('DOMContentLoaded', function() {
     const postsContainer = document.getElementById('postsContainer');
     const postContent = document.getElementById('postContent');
     const commentsContainer = document.getElementById('commentsContainer');
-    
-    // Sample data for posts and comments
-    const posts = JSON.parse(localStorage.getItem('posts')) || [];
 
-    // Function to display posts
-    function displayPosts() {
+    // Function to fetch and display posts
+    async function fetchPosts() {
+        const response = await fetch('http://localhost:8000/posts');
+        const posts = await response.json();
         if (postsContainer) {
             postsContainer.innerHTML = '';
             posts.forEach((post, index) => {
                 const postDiv = document.createElement('div');
                 postDiv.className = 'post';
-                postDiv.innerHTML = `<h2>${post.title}</h2><a href="showPost.html?index=${index}">Read More</a>`;
+                postDiv.innerHTML = `<h2>${post.title}</h2><a href="showPost.html?id=${post.id}">Read More</a>`;
                 postsContainer.appendChild(postDiv);
             });
         }
     }
 
-    // Function to display a single post
-    function displayPost() {
+    // Function to fetch and display a single post and its comments
+    async function fetchPost() {
         if (postContent) {
             const params = new URLSearchParams(window.location.search);
-            const index = params.get('index');
-            if (index !== null) {
-                const post = posts[index];
+            const id = params.get('id');
+            if (id !== null) {
+                const response = await fetch(`http://localhost:8000/posts/${id}`);
+                const post = await response.json();
                 postContent.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p>`;
-                displayComments(index);
+                fetchComments(id);
             }
         }
     }
 
-    // Function to display comments
-    function displayComments(postIndex) {
+    // Function to fetch and display comments for a specific post
+    async function fetchComments(postId) {
         if (commentsContainer) {
-            const comments = posts[postIndex].comments || [];
+            const response = await fetch(`http://localhost:8000/posts/${postId}/comments`);
+            const comments = await response.json();
             commentsContainer.innerHTML = '';
             comments.forEach((comment, index) => {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
-                commentDiv.innerHTML = `<p>${comment}</p>`;
+                commentDiv.innerHTML = `<p>${comment.content}</p>`;
                 commentsContainer.appendChild(commentDiv);
             });
         }
     }
 
-    // Function to add a new comment
-    window.addComment = function() {
+    // Function to add a new comment to a post
+    window.addComment = async function() {
         const params = new URLSearchParams(window.location.search);
-        const index = params.get('index');
-        if (index !== null) {
+        const postId = params.get('id');
+        if (postId !== null) {
             const commentText = document.getElementById('commentText').value;
             if (commentText) {
-                if (!posts[index].comments) {
-                    posts[index].comments = [];
+                const response = await fetch(`http://localhost:8000/posts/${postId}/comments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ content: commentText })
+                });
+                if (response.ok) {
+                    fetchComments(postId);
+                    document.getElementById('commentText').value = '';
                 }
-                posts[index].comments.push(commentText);
-                localStorage.setItem('posts', JSON.stringify(posts));
-                displayComments(index);
-                document.getElementById('commentText').value = '';
             } else {
                 alert('Please enter a comment.');
             }
@@ -67,18 +72,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to add a new post
-    window.addPost = function() {
+    window.addPost = async function() {
         const title = document.getElementById('title').value;
         const content = document.getElementById('content').value;
         if (title && content) {
-            posts.push({ title, content, comments: [] });
-            localStorage.setItem('posts', JSON.stringify(posts));
-            window.location.href = 'main.html';
+            const response = await fetch('http://localhost:8000/posts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title: title, content: content })
+            });
+            if (response.ok) {
+                window.location.href = 'main.html'; // Redirect to main page after post creation
+            }
         } else {
             alert('Please enter both title and content.');
         }
     }
 
-    displayPosts();
-    displayPost();
+    fetchPosts();
+    fetchPost();
 });
