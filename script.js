@@ -9,15 +9,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const posts = await response.json();
         if (postsContainer) {
             postsContainer.innerHTML = '';
-            posts.forEach((post, index) => {
+            posts.forEach((post) => {
                 const postDiv = document.createElement('div');
                 postDiv.className = 'post';
-                postDiv.innerHTML = `<a href="showPost.html?id=${post.id}"><h2>${post.title}</h2></a>`;
+                const utcDate = new Date(post.created_at + 'Z'); // UTC 시간으로 파싱
+                const formattedDate = utcDate.toLocaleDateString("ko-KR", {
+                    year: 'numeric', month: '2-digit', day: '2-digit',
+                    hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Seoul'
+                });  // 날짜와 시간을 포함하여 형식 지정
+                postDiv.innerHTML = `
+                    <a href="showPost.html?id=${post.id}">
+                        <h2>${post.title}</h2>
+                        <p>${formattedDate}</p>
+                    </a>`;
                 postsContainer.appendChild(postDiv);
             });
         }
     }
-
+    
+    
     // Function to fetch and display a single post and its comments
     async function fetchPost() {
         if (postContent) {
@@ -84,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ title: title, content: content })
             });
             if (response.ok) {
-                window.location.href = 'main.html'; // Redirect to main page after post creation
+                window.location.href = 'board.html'; // Redirect to main page after post creation
             }
         } else {
             alert('Please enter both title and content.');

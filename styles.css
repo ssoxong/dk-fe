@@ -84,3 +84,10 @@ a {
 a:hover {
     color: #0056b3; /* 호버 시 글씨 색상 변경 */
 }
+
+img{
+    width: 5rem;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+}
