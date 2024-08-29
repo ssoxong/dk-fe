@@ -28,7 +28,7 @@
                 return;
             }
 
-            const response = await fetch(`http://localhost:8000/school-meals/${atptCode}/${schoolCode}/${date}`);
+            const response = await fetch(`https://dk-be.onrender.com/school-meals/${atptCode}/${schoolCode}/${date}`);
             if (!response.ok) {
                 alert('급식 정보를 불러오는 데 실패했습니다.');
                 return;
