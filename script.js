@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Seoul'
                 });  // 날짜와 시간을 포함하여 형식 지정
                 postDiv.innerHTML = `
-                    <a href="showPost.html?id=${post.id}">
+                    <a href="showPost.html?id=${post._id}">
                         <h2>${post.title}</h2>
                         <p>${formattedDate}</p>
                     </a>`;
