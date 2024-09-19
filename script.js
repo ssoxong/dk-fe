@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to fetch and display posts
     async function fetchPosts() {
-        const response = await fetch('https://dk-be.onrender.com/posts');
+        const response = await fetch('https://vercel-fastapi-deployment-seven-roan.vercel.app/posts');
         const posts = await response.json();
         if (postsContainer) {
             postsContainer.innerHTML = '';
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
             if (id !== null) {
-                const response = await fetch(`https://dk-be.onrender.com/posts/${id}`);
+                const response = await fetch(`https://vercel-fastapi-deployment-seven-roan.vercel.app/posts/${id}`);
                 const post = await response.json();
                 postContent.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p>`;
                 fetchComments(id);
@@ -45,13 +45,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to fetch and display comments for a specific post
     async function fetchComments(postId) {
         if (commentsContainer) {
-            const response = await fetch(`https://dk-be.onrender.com/posts/${postId}/comments`);
+            const response = await fetch(`https://vercel-fastapi-deployment-seven-roan.vercel.app/posts/${postId}/comments`);
             const comments = await response.json();
             commentsContainer.innerHTML = '';
             comments.forEach((comment, index) => {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
-                commentDiv.innerHTML = `<p>익명 ${index+1}: ${comment.content}</p>`;
+                commentDiv.innerHTML = `<p>익명 댓글 ${index+1}: ${comment.content}</p>`;
                 commentsContainer.appendChild(commentDiv);
             });
         }
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (postId !== null) {
             const commentText = document.getElementById('commentText').value;
             if (commentText) {
-                const response = await fetch(`https://dk-be.onrender.com/posts/${postId}/comments`, {
+                const response = await fetch(`https://vercel-fastapi-deployment-seven-roan.vercel.app/posts/${postId}/comments`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const title = document.getElementById('title').value;
         const content = document.getElementById('content').value;
         if (title && content) {
-            const response = await fetch('https://dk-be.onrender.com/posts', {
+            const response = await fetch('https://vercel-fastapi-deployment-seven-roan.vercel.app/posts', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = 'board.html'; // Redirect to main page after post creation
             }
         } else {
-            alert('Please enter both title and content.');
+            alert('Please enter both title and content!');
         }
     }
 
